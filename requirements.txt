@@ -1,1 +1,5 @@
 pandas
+numpy
+mlflow
+sklearn
+xgboost

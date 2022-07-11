@@ -33,7 +33,8 @@ class Dataset:
         return
 
     def convert_date(self):
-        self.dataset['month'] = pd.to_datetime(self.dataset['month'], infer_datetime_format=True)
+        self.dataset['month'] = pd.to_datetime(self.dataset['month'],
+                                               infer_datetime_format=True)
         return
     
     def get_postal_district(self):
@@ -41,15 +42,15 @@ class Dataset:
         return
     
     def get_year(self):
-        self.dataset['year'] = self.dataset['month'].dt.year
+        self.dataset['year'] = self.dataset['month'].dt.year.astype(str)
         return
     
     def get_quarter(self):
-        self.dataset['quarter_period'] = self.dataset['month'].dt.quarter
+        self.dataset['quarter_period'] = self.dataset['month'].dt.quarter.astype(str)
         return
     
     def get_month(self):
-        self.dataset['month_period'] = self.dataset['month'].dt.month
+        self.dataset['month_period'] = self.dataset['month'].dt.month.astype(str)
         return
     
     @staticmethod
