@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/xd/Desktop/Projects/hdbml/mlruns/0/14ad652900ad422ab7ac33648f2e2261/artifacts
+end_time: 1657544295955
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 14ad652900ad422ab7ac33648f2e2261
+run_uuid: 14ad652900ad422ab7ac33648f2e2261
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1657544284909
+status: 3
+tags: []
+user_id: xd

@@ -7,6 +7,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import ElasticNet
 from xgboost import XGBRegressor
+from urllib.parse import urlparse
+import mlflow
+import mlflow.sklearn
 
 import logging
 import sys
@@ -15,6 +18,15 @@ logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 def eval_metrics(actual, pred):
+    """_summary_
+
+    Args:
+        actual (_type_): _description_
+        pred (_type_): _description_
+
+    Returns:
+        _type_: rmse, mae, r2
+    """
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
     r2 = r2_score(actual, pred)
@@ -58,9 +70,22 @@ def run_model():
     X_train, X_test, y_train, y_test = train_test_split(dataset.drop('resale_price', axis=1),
                                                         dataset['resale_price'],
                                                         train_size=0.8)
-    clf.steps.append(['regressor', XGBRegressor()])
-    clf.fit(X_train, y_train)
-    pred = clf.predict(X_test)
-    print(eval_metrics(y_test, pred))
+    xgbr = XGBRegressor()
+    clf.steps.append(['regressor', xgbr])
+    
+    with mlflow.start_run():
+        clf.fit(X_train, y_train)
+        pred = clf.predict(X_test)
+        rmse, mae, r2 = eval_metrics(y_test, pred)
+        mlflow.log_metrics({'rmse': rmse,
+                            'mae': mae,
+                            'r2': r2})
+        
+        tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+
+        if tracking_url_type_store != 'file':
+            mlflow.sklearn.log_model(xgbr, "model", registered_model_name="XGBoostHDB")
+        else:
+            mlflow.sklearn.log_model(xgbr, "model")
     
 run_model()
